@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>The Fridge</title>
+<meta name="description" content="A pen-first learning app for kids in kindergarten through 5th grade, with a parent dashboard. Fully offline.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one long scroll. A fridge door opens the page with work stuck to it by magnets, then
+   two halves (kids, grown-ups) of alternating screenshot/text rows, then a privacy panel. */
+:root {
+  --bg: #fff7f0;          /* the app's own cream */
+  --surface: #ffffff;
+  --ink: #221d2c;
+  --muted: #5f5869;
+  --line: #eadfd6;
+  --accent: #4b57d1;      /* the app's indigo buttons */
+  --accent-ink: #ffffff;
+  --peach: #ffdcbf;       /* reading & writing tiles */
+  --lavender: #e3e4ff;    /* math tiles */
+  --pink: #ffd9e4;        /* explore tiles */
+  --door: #eef1f4;        /* enamel */
+  --door-edge: #d7dce2;
+  --bezel: #1d1b22;
+  --shadow: 0 1px 2px rgb(60 40 30 / .08), 0 12px 32px -12px rgb(60 40 30 / .25);
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17151c; --surface: #221f29; --ink: #f4eff6; --muted: #b3aabb; --line: #36313f;
+    --accent: #9ea6ff; --accent-ink: #15142a; --peach: #4a3324; --lavender: #2c2e55; --pink: #4a2a37;
+    --door: #2a2d33; --door-edge: #3a3e46; --bezel: #050507;
+    --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 14px 36px -12px rgb(0 0 0 / .7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17151c; --surface: #221f29; --ink: #f4eff6; --muted: #b3aabb; --line: #36313f;
+  --accent: #9ea6ff; --accent-ink: #15142a; --peach: #4a3324; --lavender: #2c2e55; --pink: #4a2a37;
+  --door: #2a2d33; --door-edge: #3a3e46; --bezel: #050507;
+  --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 14px 36px -12px rgb(0 0 0 / .7);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 400 1.0625rem/1.6 var(--body);
+  padding-inline: 16px;
+}
+.wrap { max-width: 1120px; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+/* ---------- top bar ---------- */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  margin-inline: -16px; padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.wordmark { font: 800 1.25rem/1 var(--display); color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.wordmark .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--accent); box-shadow: inset -3px -3px 0 rgb(0 0 0 / .18); }
+.bar nav { display: flex; gap: 6px; flex-wrap: wrap; }
+.bar nav a {
+  font-weight: 700; font-size: .95rem; text-decoration: none; color: var(--ink);
+  padding: 6px 12px; border-radius: 999px;
+}
+.bar nav a:hover { background: var(--lavender); }
+
+/* ---------- hero ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(28px, 5vw, 64px); align-items: center; padding-block: clamp(36px, 7vw, 88px) clamp(40px, 6vw, 72px); }
+.eyebrow { font: 700 .8rem/1 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.hero h1 { font-size: clamp(3.2rem, 9vw, 6.4rem); font-weight: 800; letter-spacing: -.035em; margin-block: 14px 18px; }
+.hero h1 .door-word { color: var(--accent); }
+.lede { font-size: clamp(1.1rem, 1.6vw, 1.3rem); max-width: 34ch; }
+.facts { list-style: none; padding: 0; margin: 26px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.facts li { font-weight: 700; font-size: .92rem; padding: 7px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+
+/* The fridge door: enamel panel, handle on the left edge, screenshots held by magnets. */
+.door {
+  position: relative; border-radius: 28px; padding: clamp(22px, 4vw, 40px) clamp(18px, 3vw, 34px) clamp(30px, 4vw, 44px) clamp(36px, 5vw, 56px);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--door) 70%, white) 0%, var(--door) 55%, color-mix(in srgb, var(--door) 92%, black) 100%);
+  border: 1px solid var(--door-edge);
+  box-shadow: var(--shadow);
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2.5vw, 26px);
+}
+.door::before { /* handle */
+  content: ""; position: absolute; left: clamp(12px, 2vw, 20px); top: 16%; bottom: 16%; width: 8px; border-radius: 8px;
+  background: linear-gradient(90deg, var(--door-edge), color-mix(in srgb, var(--door-edge) 60%, white), var(--door-edge));
+  box-shadow: 0 2px 4px rgb(0 0 0 / .18);
+}
+.stuck { position: relative; margin: 0; background: var(--surface); padding: 6px; border-radius: 6px; box-shadow: 0 2px 6px rgb(0 0 0 / .15), 0 10px 20px -10px rgb(0 0 0 / .35); }
+.stuck img { display: block; width: 100%; height: auto; border-radius: 3px; }
+.stuck .magnet {
+  position: absolute; top: -10px; left: 50%; translate: -50% 0; width: 26px; height: 26px; border-radius: 50%;
+  box-shadow: inset -4px -5px 0 rgb(0 0 0 / .2), inset 3px 3px 0 rgb(255 255 255 / .35), 0 3px 5px rgb(0 0 0 / .3);
+}
+.stuck.a { grid-column: 1 / -1; rotate: -1.2deg; }
+.stuck.b { rotate: 1.8deg; }
+.stuck.c { rotate: -2.2deg; margin-top: 10px; }
+.m-red { background: #e5534b; } .m-blue { background: #4b8fe0; } .m-yellow { background: #f2c230; } .m-green { background: #43a96b; }
+.stuck figcaption { font: 400 .8rem/1.3 var(--body); color: var(--muted); padding: 6px 4px 1px; }
+
+/* ---------- sections ---------- */
+section { padding-block: clamp(48px, 7vw, 88px); border-top: 1px solid var(--line); }
+.sec-head { display: grid; gap: 12px; max-width: 46rem; margin-bottom: clamp(32px, 5vw, 56px); }
+.sec-head h2 { font-size: clamp(2.1rem, 5vw, 3.3rem); font-weight: 800; letter-spacing: -.025em; }
+.sec-head p { font-size: 1.15rem; color: var(--muted); }
+.tag { justify-self: start; font: 700 .78rem/1 var(--body); letter-spacing: .12em; text-transform: uppercase; padding: 7px 12px; border-radius: 999px; }
+.tag.kids { background: var(--peach); }
+.tag.grown { background: var(--lavender); }
+
+.rows { display: grid; gap: clamp(48px, 7vw, 84px); }
+.row { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+.row.flip { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+.row.flip .shots { order: 2; }
+.copy { display: grid; gap: 14px; min-width: 0; }
+.copy h3 { font-size: clamp(1.6rem, 3vw, 2.15rem); font-weight: 800; letter-spacing: -.02em; }
+.copy p { max-width: 38rem; }
+.copy ul { margin: 0; padding-left: 1.15em; display: grid; gap: 6px; }
+.copy .note { font-size: .95rem; color: var(--muted); }
+
+/* Screenshots sit in a tablet bezel and open larger on click. */
+.shots { display: grid; gap: 16px; min-width: 0; }
+.shots.pair { grid-template-columns: 1fr 1fr; }
+.shots.pair .tab:first-child { grid-column: 1 / -1; }
+.tab {
+  display: block; width: 100%; padding: 0; cursor: zoom-in;
+  background: var(--bezel); border: 0; border-radius: clamp(12px, 1.6vw, 20px);
+  padding: clamp(6px, .9vw, 11px); box-shadow: var(--shadow);
+  transition: translate .2s ease;
+}
+.tab:hover { translate: 0 -3px; }
+@media (prefers-reduced-motion: reduce) { .tab { transition: none; } .tab:hover { translate: none; } }
+.tab img { display: block; width: 100%; height: auto; border-radius: clamp(6px, .8vw, 10px); }
+
+/* Activity list from the home screen, grouped the way the app groups it. */
+.shelves { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 8px; }
+.shelf { border-radius: 18px; padding: 16px 18px 18px; display: grid; gap: 8px; align-content: start; }
+.shelf h4 { margin: 0; font: 800 1.05rem/1.2 var(--display); }
+.shelf ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: .97rem; }
+.s-math { background: var(--lavender); } .s-read { background: var(--peach); } .s-explore { background: var(--pink); } .s-feel { background: var(--surface); border: 1px solid var(--line); }
+
+.code { font: 500 .85em/1 var(--mono); padding: 2px 6px; border-radius: 5px; background: var(--lavender); white-space: nowrap; }
+.bands { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .95rem; }
+.bands span { display: inline-flex; align-items: center; gap: 6px; }
+.bands i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+
+/* ---------- privacy ---------- */
+.privacy {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 28px;
+  padding: clamp(24px, 4vw, 48px); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 56px);
+}
+.privacy h2 { font-size: clamp(2rem, 4.4vw, 3rem); font-weight: 800; letter-spacing: -.025em; }
+.privacy .intro { display: grid; gap: 14px; align-content: start; }
+.privacy .intro p { color: var(--muted); }
+.promises { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px 28px; }
+.promises li { display: grid; gap: 4px; padding-top: 14px; border-top: 2px solid var(--line); }
+.promises b { font: 800 1.08rem/1.25 var(--display); }
+.promises span { color: var(--muted); font-size: .98rem; }
+
+footer { padding-block: 40px 56px; color: var(--muted); font-size: .95rem; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--line); }
+
+/* ---------- lightbox ---------- */
+dialog { border: 0; padding: 0; background: transparent; max-width: min(1400px, 96vw); width: 100%; }
+dialog::backdrop { background: rgb(10 8 14 / .82); }
+dialog img { display: block; width: 100%; height: auto; border-radius: 12px; }
+dialog p { color: #f4eff6; text-align: center; padding-top: 10px; font-size: .95rem; }
+dialog button { position: absolute; top: -44px; right: 0; background: #f4eff6; color: #1d1b22; border: 0; border-radius: 999px; font: 700 .95rem/1 var(--body); padding: 9px 14px; cursor: pointer; }
+dialog form { position: relative; margin-top: 48px; }
+
+/* ---------- narrow ---------- */
+@media (max-width: 880px) {
+  .hero, .row, .row.flip, .privacy { grid-template-columns: minmax(0, 1fr); }
+  .row.flip .shots { order: 0; }
+  .shelves { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .shelves, .promises { grid-template-columns: minmax(0, 1fr); }
+  .door { grid-template-columns: minmax(0, 1fr); }
+  .stuck.c { margin-top: 4px; }
+  .bar nav a { padding: 6px 8px; font-size: .9rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="wordmark" href="#top"><span class="dot" aria-hidden="true"></span>The Fridge</a>
+    <nav aria-label="Sections">
+      <a href="#kids">For kids</a>
+      <a href="#grownups">For grown-ups</a>
+      <a href="#privacy">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Android tablet app · Kindergarten to 5th grade</p>
+      <h1>The <span class="door-word">Fridge</span></h1>
+      <p class="lede">A learning app built around a pen. Kids do short daily lessons in math, reading and writing, then explore science, history, coding and music. Their best work goes up on the fridge for a grown-up to see.</p>
+      <ul class="facts">
+        <li>Works fully offline</li>
+        <li>No accounts, no ads</li>
+        <li>Everything can be read aloud</li>
+        <li>California K–5 standards</li>
+      </ul>
+    </div>
+    <div class="door" aria-label="Screens from the app, stuck to a fridge door">
+      <figure class="stuck a">
+        <span class="magnet m-red" aria-hidden="true"></span>
+        <img src="img/artwork.jpg" alt="A child's drawing that says I love you, approved by a parent with the note: I love you too" width="1600" height="779">
+        <figcaption>A drawing sent to the Fridge, with a note back from a grown-up.</figcaption>
+      </figure>
+      <figure class="stuck b">
+        <span class="magnet m-blue" aria-hidden="true"></span>
+        <img src="img/world.jpg" alt="My World: a meadow with the child's robot avatar, pets, a watered garden, stickers and a closet of outfits" width="1600" height="915">
+        <figcaption>My World</figcaption>
+      </figure>
+      <figure class="stuck c">
+        <span class="magnet m-yellow" aria-hidden="true"></span>
+        <img src="img/tracing.jpg" alt="Letter tracing: a lowercase p with numbered start dots and arrows" width="1600" height="915">
+        <figcaption>Letter tracing</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- ================= KIDS ================= -->
+  <section id="kids">
+    <div class="sec-head">
+      <span class="tag kids">For kids</span>
+      <h2>Short lessons, a real pen, and a world to grow</h2>
+      <p>Every question, button and story has a speaker icon, so a child who can't read yet can still find their way. Wrong answers get "try again" or "keep going." There's no red X and no buzzer.</p>
+    </div>
+
+    <div class="rows">
+      <div class="row">
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="The warm-up game: a picture question for multiplication"><img src="img/warmup.jpg" alt="Warm-up game: which multiplication matches a picture of four groups of two stars" width="1600" height="760" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Make your avatar"><img src="img/avatar.jpg" alt="Avatar maker: pick a character, a color and accessories" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="A reading question in the warm-up"><img src="img/reading-q.jpg" alt="Reading question about wolves returning to Yellowstone and why trees grew back" width="1600" height="879" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>It starts with a warm-up game</h3>
+          <p>A new learner makes an avatar, then plays a short placement game across math, reading and writing. It finds where they are, so the first lessons are neither too easy nor too hard.</p>
+          <p>"I don't know" is always one of the answers. Picking it is fine, and it helps the app choose better than a guess would.</p>
+        </div>
+      </div>
+
+      <div class="row flip">
+        <div class="shots">
+          <button class="tab" type="button" data-caption="The home screen: Today's Picks and the avatar's needs"><img src="img/home-picks.jpg" alt="Home screen with coins, a streak, the avatar's snack and sleep meters, and five Today's Picks tiles" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Today's Picks first, then free choice</h3>
+          <p>Each day the home screen offers five picks (four in kindergarten), chosen from new skills and things due for review. Picks earn double coins. Once they're done, everything else opens up.</p>
+          <p>The avatar gets hungry and sleepy, a little like a Tamagotchi. Kids can buy it a snack, take a stretch break, or do slow breathing in the Calm Corner. These reminders only appear on the home screen, never in the middle of a lesson.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="Writing prompts: free write, opinion, facts, and stories"><img src="img/writing.jpg" alt="Writing screen with a snowy-day prompt, a Say your idea button and lined paper" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Letter tracing: capitals, lowercase, numbers and cursive"><img src="img/tracing.jpg" alt="Letter tracing for a lowercase p" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Typing practice on a hardware keyboard"><img src="img/typing.jpg" alt="Typing practice: the line jump and run with an on-screen keyboard highlighting J" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Real handwriting with a real pen</h3>
+          <p>Writing happens on lined paper with a stylus. Prompts cover free writing, opinions, facts and stories. If a child is stuck, they can tap "Say your idea" and talk it through out loud first. Speech recognition runs on the tablet itself.</p>
+          <ul>
+            <li>Tracing covers capitals, lowercase, numbers and cursive, with numbered start dots and arrows.</li>
+            <li>Palm rejection means a hand resting on the screen doesn't leave marks.</li>
+            <li>Typing lessons use a real keyboard and show which key comes next.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row flip">
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="Loop Fixer: find the wrong blocks and fix the robot's path"><img src="img/loop-fixer.jpg" alt="Coding puzzle: a robot on a grid with rocks, a star, and a row of direction and repeat blocks" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Science: What do plants need? Drag each card to a side"><img src="img/science-sort.jpg" alt="Science sort: does a plant need air, candy, TV, sunlight, water or toys to grow" width="1600" height="841" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Coding puzzles, pitched to the child's grade"><img src="img/coding.jpg" alt="Coding menu with Grade 2 puzzles: Long Hallway, Gem Hunt, The Locked Door, Rocky River, Count Again, Gem in a Hole" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Science, history and coding</h3>
+          <p>Beyond the core subjects, there's science (diagrams and "Sort it!" activities), history timelines, and coding puzzles where kids give a robot step-by-step directions or find the bug in someone else's.</p>
+          <p>There's music too, with a xylophone, drums and a game where kids play back a tune they just heard.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="Read-Along: the tablet reads with them, one part at a time"><img src="img/readalong-story.jpg" alt="Olive the Owl Learns to Fly, part 1 of 5, with the current paragraph highlighted and buttons for Read to me and Questions" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Read-Along: stories, true facts, poems and paired texts for each grade"><img src="img/readalong-list.jpg" alt="Read-Along library with tabs for stories, true facts, poems and compare two, and grade filters from kindergarten to grade 5" width="1600" height="885" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Listen &amp; Learn: short shows for each grade"><img src="img/listen.jpg" alt="Listen &amp; Learn episodes for grade 2 such as My Life on a Timeline and How a Law Is Made, about three minutes each" width="1600" height="879" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Stories to read together</h3>
+          <p>Read-Along has stories, true facts, poems and pairs of texts to compare, sorted by grade. The tablet reads along one part at a time and highlights the part it's on, or kids can just listen. A few questions about the story come at the end.</p>
+          <p>In Read to Me, the child reads out loud and the tablet listens. In Listen &amp; Learn, two hosts, June and Felix, talk through a history or science topic in about three minutes.</p>
+        </div>
+      </div>
+
+      <div class="row flip">
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="Calm Corner: trace the glowing light and breathe with it"><img src="img/calm.jpg" alt="Calm Corner: a glowing dot travels around a circle with the words Breathe out, and options for a circle or infinity path and a voice guide" width="1600" height="888" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Feelings: how do you think they feel?"><img src="img/feelings.jpg" alt="Feelings: It's Leo's birthday and his friends are about to arrive. Choices: happy, sad, frustrated, excited" width="1600" height="635" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Room for feelings, too</h3>
+          <p>In the Calm Corner, a glowing light moves slowly around a circle or a figure eight. Kids follow it with the pen, breathing in as it goes one way and out as it comes back. There's no score and no timer.</p>
+          <p>Feelings gives short everyday scenes and asks how someone might feel, so kids get practice naming emotions in others and in themselves.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="The Shop: seeds, pets, houses, stickers and themes"><img src="img/shop.jpg" alt="Shop, Garden tab: carrot, lettuce, sunflower and other seeds priced in coins, with how many days each takes to grow" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="My World: watering the garden"><img src="img/world.jpg" alt="My World with the avatar, pets and a garden saying thank you for the water" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Coins buy things that grow</h3>
+          <p>Finished lessons earn coins. Kids spend them on seeds, pets, a house, stickers and outfits for their avatar. Seeds take real days to grow, and only if someone remembers to water them.</p>
+          <p class="note">A wrong answer never costs coins. Grown-ups can see every coin earned and spent.</p>
+        </div>
+      </div>
+
+      <div class="row flip">
+        <div class="shots">
+          <button class="tab" type="button" data-caption="The full home screen, below Today's Picks"><img src="img/home-grid.jpg" alt="Home screen tiles for Math and Reading & Writing" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Everything on the home screen</h3>
+          <p>Each tile is its own activity, and most of them adjust to the child's level.</p>
+        </div>
+      </div>
+      <div class="shelves" aria-label="All activities">
+        <div class="shelf s-math"><h4>Math</h4><ul><li>Math Practice</li><li>Math Quiz, with a scratchpad</li><li>Clock</li><li>Cash Register</li></ul></div>
+        <div class="shelf s-read"><h4>Reading &amp; Writing</h4><ul><li>Read-Along stories</li><li>Read to Me (reading aloud)</li><li>Word Lab</li><li>Listen &amp; Do</li><li>Spelling Bee</li><li>Sentence Fixer</li><li>Writing</li><li>Tracing</li><li>Typing</li></ul></div>
+        <div class="shelf s-explore"><h4>Explore</h4><ul><li>Science Lab</li><li>History</li><li>Listen &amp; Learn podcasts</li><li>Coding</li><li>Music</li></ul></div>
+        <div class="shelf s-feel"><h4>Create, Feel &amp; My Stuff</h4><ul><li>Sketchbook</li><li>Feelings</li><li>Calm Corner</li><li>Shop</li><li>My World</li><li>My Fridge</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GROWN-UPS ================= -->
+  <section id="grownups">
+    <div class="sec-head">
+      <span class="tag grown">For grown-ups</span>
+      <h2>A parent dashboard that shows what's actually happening</h2>
+      <p>The parent area is behind a PIN. Anything that changes grades, grants coins or deletes work happens there.</p>
+    </div>
+
+    <div class="rows">
+      <div class="row">
+        <div class="shots">
+          <button class="tab" type="button" data-caption="Standards tab: the current math stage and its skills"><img src="img/stage.jpg" alt="Math: Grade 1, Trimester 1. Two of six new skills mastered, with a list of skills marked getting there, mastered or needs help, and buttons to move on or go back a stage" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>You set the pace</h3>
+          <p>Math, reading and writing each move through stages: a grade plus a trimester. The dashboard shows how many of a stage's new skills your child has mastered. When you think they're ready, you move them on. The app never promotes them on its own.</p>
+          <p>Each subject moves separately. A child can be in 2nd-grade reading and 1st-grade math.</p>
+        </div>
+      </div>
+
+      <div class="row flip">
+        <div class="shots">
+          <button class="tab" type="button" data-caption="Every standard for a grade, with how it's going"><img src="img/standards.jpg" alt="Math, grade 1 standards list: 1.OA.1 mastered, 1.OA.2 to 1.OA.4 not started, 1.OA.5 and 1.OA.6 getting there" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Every standard, in one list</h3>
+          <p>Pick a grade and see each California standard for it: Common Core math and English, NGSS science, and history–social science. Each one shows which activities practice it and how your child is doing.</p>
+          <div class="bands" aria-label="Status key">
+            <span><i style="background:#43a96b"></i>Mastered</span>
+            <span><i style="background:#f2c230"></i>Getting there</span>
+            <span><i style="background:#e5534b"></i>Needs help</span>
+            <span><i style="background:#b9b4bf"></i>Not started</span>
+          </div>
+          <p class="note">For example, <span class="code">1.OA.1</span> is word problems within 20. The list also says which standards the app doesn't cover yet.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="Report: active time and time by subject"><img src="img/report-time.jpg" alt="Report: 3 hours 59 minutes active time, learning on 6 of 7 days, 208 activities, and a bar chart of time by subject led by coding" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Report: average score for every skill practiced"><img src="img/report-skills.jpg" alt="Skills practiced with a bar and percentage for each, such as addition within 10 at 80 percent" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Report: checkpoint results and work saved to the Fridge"><img src="img/report-checkpoints.jpg" alt="Checkpoint result: Math Grade 1 Trimester 1, 10 of 12, with standards met and approaching" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>A report that counts real time</h3>
+          <p>Active time only counts touching, writing or typing. If the tablet sits idle on a lesson, that time is left out. The report breaks time down by subject and lists every activity and every skill practiced, with an average score for each.</p>
+          <p>When you want a clearer check, start a trimester checkpoint: three questions for each new standard, no hints. Your child can review their answers before turning it in. Each standard comes back as Met, Approaching or Not yet, and the report tracks the trend.</p>
+        </div>
+      </div>
+
+      <div class="row flip">
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="The Fridge tab: drawings and writing, filtered by kind"><img src="img/fridge.jpg" alt="Parent view of the Fridge: handwritten stories and drawings, each marked approved" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Approve a piece, leave a note, or print it"><img src="img/artwork.jpg" alt="A drawing that says I love you, with an approved badge, a note for the learner, and Print" width="1600" height="779" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>The fridge, without the magnets</h3>
+          <p>Drawings, stories and handwritten math work arrive in your inbox. Approve a piece and it goes up on your child's fridge with coins and a note from you. You can also print it for the real fridge.</p>
+          <p>Opinion, informative and story writing is scored by you, using that grade's rubric.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRIVACY ================= -->
+  <section id="privacy">
+    <div class="privacy">
+      <div class="intro">
+        <h2>It stays on the tablet</h2>
+        <p>The Fridge has no servers and no accounts. Your child's work, voice and progress never leave the device unless you export them yourself.</p>
+      </div>
+      <ul class="promises">
+        <li><b>No internet access</b><span>The app doesn't request Android's internet permission, so it has no way to send anything anywhere.</span></li>
+        <li><b>Encrypted on the device</b><span>The database is encrypted, with its key held by the tablet's Android Keystore. Device backups are turned off.</span></li>
+        <li><b>Voices stay local</b><span>Read-aloud uses offline voices, and speech recognition runs on the tablet. When a child reads aloud, only the score is kept, never the recording.</span></li>
+        <li><b>No ads, no tracking</b><span>No sign-up, analytics or in-app purchases. Coins are only earned by learning.</span></li>
+        <li><b>A PIN for grown-ups</b><span>The PIN is stored as a salted hash and locks out after repeated wrong tries.</span></li>
+        <li><b>Take a learner with you</b><span>Export one child to a passphrase-encrypted file and import them on another tablet.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <span>The Fridge · Android, built for stylus tablets and tested on a Pixel Tablet</span>
+    <span>Screenshots are from the app in daily use.</span>
+  </footer>
+</main>
+
+<dialog id="zoom" aria-label="Screenshot">
+  <form method="dialog">
+    <button type="submit" aria-label="Close">Close ✕</button>
+    <img id="zoom-img" alt="">
+    <p id="zoom-cap"></p>
+  </form>
+</dialog>
+
+<script>
+(() => {
+  const dlg = document.getElementById("zoom");
+  const img = document.getElementById("zoom-img");
+  const cap = document.getElementById("zoom-cap");
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const src = btn.querySelector("img");
+      img.src = src.src;
+      img.alt = src.alt;
+      cap.textContent = btn.dataset.caption || "";
+      if (dlg.showModal) dlg.showModal();
+    });
+  });
+  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+})();
+</script>
+</body>
+</html>
