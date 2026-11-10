@@ -159,6 +159,18 @@ section { padding-block: clamp(48px, 7vw, 88px); border-top: 1px solid var(--lin
 .bands span { display: inline-flex; align-items: center; gap: 6px; }
 .bands i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
 
+/* Fridge Parent: three phone screenshots side by side, in a taller, rounder bezel. */
+.shots.phones { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 1.6vw, 16px); }
+.shots.phones .tab { border-radius: clamp(14px, 2vw, 24px); padding: clamp(4px, .7vw, 8px); }
+.shots.phones .tab img { border-radius: clamp(9px, 1.3vw, 16px); }
+
+/* Smaller parent features, as cards under the rows. */
+#phones { scroll-margin-top: 90px; }
+.minis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; margin-top: clamp(40px, 6vw, 64px); }
+.mini { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px 20px; display: grid; gap: 6px; align-content: start; }
+.mini h4 { margin: 0; font: 800 1.08rem/1.25 var(--display); }
+.mini p { color: var(--muted); font-size: .98rem; }
+
 /* ---------- privacy ---------- */
 .privacy {
   background: var(--surface); border: 1px solid var(--line); border-radius: 28px;
@@ -168,7 +180,7 @@ section { padding-block: clamp(48px, 7vw, 88px); border-top: 1px solid var(--lin
 .privacy .intro { display: grid; gap: 14px; align-content: start; }
 .privacy .intro p { color: var(--muted); }
 .promises { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px 28px; }
-.promises li { display: grid; gap: 4px; padding-top: 14px; border-top: 2px solid var(--line); }
+.promises li { display: grid; gap: 4px; align-content: start; padding-top: 14px; border-top: 2px solid var(--line); }
 .promises b { font: 800 1.08rem/1.25 var(--display); }
 .promises span { color: var(--muted); font-size: .98rem; }
 
@@ -204,6 +216,7 @@ dialog form { position: relative; margin-top: 48px; }
     <nav aria-label="Sections">
       <a href="#kids">For kids</a>
       <a href="#grownups">For grown-ups</a>
+      <a href="#phones">Parent phones</a>
       <a href="#privacy">Privacy</a>
     </nav>
   </div>
@@ -220,6 +233,7 @@ dialog form { position: relative; margin-top: 48px; }
         <li>No accounts, no ads</li>
         <li>Everything can be read aloud</li>
         <li>California K–5 standards</li>
+        <li>A parent app for your phone</li>
       </ul>
     </div>
     <div class="door" aria-label="Screens from the app, stuck to a fridge door">
@@ -264,34 +278,50 @@ dialog form { position: relative; margin-top: 48px; }
       </div>
 
       <div class="row flip">
-        <div class="shots">
-          <button class="tab" type="button" data-caption="The home screen: Today's Picks and the avatar's needs"><img src="img/home-picks.jpg" alt="Home screen with coins, a streak, the avatar's snack and sleep meters, and five Today's Picks tiles" width="1600" height="915" loading="lazy"></button>
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="Today's Picks: eight a day, and most activities wait for them"><img src="img/picks.jpg" alt="Home screen: Do your Today's Picks first, 0 of 8 done, with tiles for Math Practice, Read-Along, Sentence Fixer and Tell a story, each paying double coins" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="On weekends nothing waits, and picks still pay double"><img src="img/picks-weekend.jpg" alt="Home screen on a weekend: It's the weekend, so everything is open! Picks still pay double. Eight pick tiles below" width="1600" height="915" loading="lazy"></button>
         </div>
         <div class="copy">
           <h3>Today's Picks first, then free choice</h3>
-          <p>Each day the home screen offers five picks (four in kindergarten), chosen from new skills and things due for review. Picks earn double coins. Once they're done, everything else opens up.</p>
-          <p>The avatar gets hungry and sleepy, a little like a Tamagotchi. Kids can buy it a snack, take a stretch break, or do slow breathing in the Calm Corner. These reminders only appear on the home screen, never in the middle of a lesson.</p>
+          <p>Each day the home screen offers eight picks (four in kindergarten). Standards a child hasn't started yet come first, then things due for review. Picks earn double coins. Finishing them unlocks a bonus round that pays double again for skills that aren't mastered yet.</p>
+          <p>Until the picks are done, most lessons and the Shop wait. Drawing, the Calm Corner, Feelings and My World stay open. On weekends nothing waits, and a missed Saturday or Sunday never breaks a streak.</p>
+          <p>The avatar gets hungry and sleepy, a little like a Tamagotchi. Kids can feed it from their garden, take a stretch break, or do slow breathing in the Calm Corner. These reminders only appear on the home screen, never in the middle of a lesson.</p>
         </div>
       </div>
 
       <div class="row">
         <div class="shots pair">
-          <button class="tab" type="button" data-caption="Writing prompts: free write, opinion, facts, and stories"><img src="img/writing.jpg" alt="Writing screen with a snowy-day prompt, a Say your idea button and lined paper" width="1600" height="915" loading="lazy"></button>
-          <button class="tab" type="button" data-caption="Letter tracing: capitals, lowercase, numbers and cursive"><img src="img/tracing.jpg" alt="Letter tracing for a lowercase p" width="1600" height="915" loading="lazy"></button>
-          <button class="tab" type="button" data-caption="Typing practice on a hardware keyboard"><img src="img/typing.jpg" alt="Typing practice: the line jump and run with an on-screen keyboard highlighting J" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Checkpoint Challenge: a card for math, reading and writing"><img src="img/checkpoint-goals.jpg" alt="Home screen with the avatar's needs and a Checkpoint Challenge section explaining how to fill the bar and earn stars, above Math, Reading and Writing checkpoint cards" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="After a pass, the card shows the next stage's goal"><img src="img/checkpoint-next.jpg" alt="Next Math and Next Reading checkpoint cards saying You passed your last one, ask your grown-up to move you up, with skills as stars and sprouts and a prize of 1,000 coins" width="1600" height="915" loading="lazy"></button>
         </div>
         <div class="copy">
-          <h3>Real handwriting with a real pen</h3>
-          <p>Writing happens on lined paper with a stylus. Prompts cover free writing, opinions, facts and stories. If a child is stuck, they can tap "Say your idea" and talk it through out loud first. Speech recognition runs on the tablet itself.</p>
+          <h3>A goal they can see</h3>
+          <p>A Checkpoint Challenge card on the home screen shows how close each subject is to its next checkpoint: a bar filling up, the stage's skills grouped by emoji, what to do next, and the prize. Passing pays 1,000 coins, once per stage.</p>
+          <p>Tapping a skill that isn't a star yet opens practice aimed at it. Kids are told the star rule (right on the first try, 8 of the last 10 times), and each skill counts down how many more it needs, so practice that hasn't earned the star yet still shows progress.</p>
+          <p class="note">Once a checkpoint is passed, the card shows the next stage's goal until a grown-up moves them up.</p>
+        </div>
+      </div>
+
+      <div class="row flip">
+        <div class="shots pair">
+          <button class="tab" type="button" data-caption="An opinion piece: the idea, the steps, and what the grade asks for, checked as they go"><img src="img/writing-check.jpg" alt="Writing an opinion piece on whether kids should choose what they learn one day a week. The child's idea, I think dogs are the best. Because they are fun., sits beside five steps, and a My writing needs row has I give my opinion and I give reasons ticked" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Every requirement opens a short lesson that uses the child's own sentences"><img src="img/writing-lesson.jpg" alt="A complete sentence lesson: the child's first sentence is marked complete with its subject and verb labeled, and Because they are fun. needs the rest of its idea" width="1600" height="915" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="On paper: the idea in big letters to copy, then a photo of the page"><img src="img/writing-paper.jpg" alt="Writing on paper: the child's spoken idea about making cupcakes with grandma shown in large letters, and a Take a picture of my paper button" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Real handwriting, on screen or on paper</h3>
+          <p>Writing happens on lined paper with a stylus, or on real paper, photographed with the tablet's camera inside the app. Prompts cover free writing, opinions, facts and stories, and ones a child hasn't written yet come first.</p>
+          <p>Kids plan before they write. They say or type their idea, and the app checks it against what their grade asks for: complete sentences, enough of them, and, when typed, capitals and punctuation. Each requirement opens a short read-aloud lesson with examples. Before sending a piece, kids tick off their grade's checklist themselves. Speech recognition runs on the tablet itself.</p>
           <ul>
             <li>Tracing covers capitals, lowercase, numbers and cursive, with numbered start dots and arrows.</li>
-            <li>Palm rejection means a hand resting on the screen doesn't leave marks.</li>
+            <li>Palm rejection means a hand resting on the screen doesn't leave marks, and ink starts only when the pen presses down. The pen can switch colors, erase and undo.</li>
             <li>Typing lessons use a real keyboard and show which key comes next.</li>
           </ul>
         </div>
       </div>
 
-      <div class="row flip">
+      <div class="row">
         <div class="shots pair">
           <button class="tab" type="button" data-caption="Loop Fixer: find the wrong blocks and fix the robot's path"><img src="img/loop-fixer.jpg" alt="Coding puzzle: a robot on a grid with rocks, a star, and a row of direction and repeat blocks" width="1600" height="915" loading="lazy"></button>
           <button class="tab" type="button" data-caption="Science: What do plants need? Drag each card to a side"><img src="img/science-sort.jpg" alt="Science sort: does a plant need air, candy, TV, sunlight, water or toys to grow" width="1600" height="841" loading="lazy"></button>
@@ -304,7 +334,7 @@ dialog form { position: relative; margin-top: 48px; }
         </div>
       </div>
 
-      <div class="row">
+      <div class="row flip">
         <div class="shots pair">
           <button class="tab" type="button" data-caption="Read-Along: the tablet reads with them, one part at a time"><img src="img/readalong-story.jpg" alt="Olive the Owl Learns to Fly, part 1 of 5, with the current paragraph highlighted and buttons for Read to me and Questions" width="1600" height="915" loading="lazy"></button>
           <button class="tab" type="button" data-caption="Read-Along: stories, true facts, poems and paired texts for each grade"><img src="img/readalong-list.jpg" alt="Read-Along library with tabs for stories, true facts, poems and compare two, and grade filters from kindergarten to grade 5" width="1600" height="885" loading="lazy"></button>
@@ -317,7 +347,7 @@ dialog form { position: relative; margin-top: 48px; }
         </div>
       </div>
 
-      <div class="row flip">
+      <div class="row">
         <div class="shots pair">
           <button class="tab" type="button" data-caption="Calm Corner: trace the glowing light and breathe with it"><img src="img/calm.jpg" alt="Calm Corner: a glowing dot travels around a circle with the words Breathe out, and options for a circle or infinity path and a voice guide" width="1600" height="888" loading="lazy"></button>
           <button class="tab" type="button" data-caption="Feelings: how do you think they feel?"><img src="img/feelings.jpg" alt="Feelings: It's Leo's birthday and his friends are about to arrive. Choices: happy, sad, frustrated, excited" width="1600" height="635" loading="lazy"></button>
@@ -329,15 +359,27 @@ dialog form { position: relative; margin-top: 48px; }
         </div>
       </div>
 
-      <div class="row">
+      <div class="row flip">
         <div class="shots pair">
+          <button class="tab" type="button" data-caption="The Shop: coins earned each day this week, and selling things back"><img src="img/shop-pace.jpg" alt="Shop, Themes tab: a My coins bar chart for the past week with a usual day of 332 coins, and owned themes with Use and Sell buttons showing what each would sell for" width="1600" height="915" loading="lazy"></button>
           <button class="tab" type="button" data-caption="The Shop: seeds, pets, houses, stickers and themes"><img src="img/shop.jpg" alt="Shop, Garden tab: carrot, lettuce, sunflower and other seeds priced in coins, with how many days each takes to grow" width="1600" height="915" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>Coins for careful work, not guessing</h3>
+          <p>Lessons pay 2 to 10 coins, depending on how many answers were right on the first try. Tapping choices until one works is the slow way through: after a few tries the app shows the answer or walks through it, then adds another problem like it at the end. From 1st grade, most math answers are typed on a number pad.</p>
+          <p>Kids spend coins on seeds, pets, a house, stickers and outfits for their avatar. The Shop charts what they earned each day this week and how many days an item would take to save up for. Most things they've bought can be sold back to the Shop, and a house is worth more the longer it's kept.</p>
+          <p class="note">A wrong answer never costs coins. Grown-ups can see every coin earned and spent.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="shots">
           <button class="tab" type="button" data-caption="My World: watering the garden"><img src="img/world.jpg" alt="My World with the avatar, pets and a garden saying thank you for the water" width="1600" height="915" loading="lazy"></button>
         </div>
         <div class="copy">
-          <h3>Coins buy things that grow</h3>
-          <p>Finished lessons earn coins. Kids spend them on seeds, pets, a house, stickers and outfits for their avatar. Seeds take real days to grow, and only if someone remembers to water them.</p>
-          <p class="note">A wrong answer never costs coins. Grown-ups can see every coin earned and spent.</p>
+          <h3>A world that grows</h3>
+          <p>My World puts the avatar, pets, garden and house in one scene. Seeds take real days to grow, and only if someone remembers to water them. Ripe fruit and vegetables can be picked and fed to the avatar or a pet, and then they grow back.</p>
+          <p>Tapping the house goes inside. Every house has its own room, with the sticker poster and a wardrobe of outfits. Fish, ducks and frogs swim in the pond, flowers can come indoors, and pets leave the occasional mess to tap away. Nothing bad happens if it stays.</p>
         </div>
       </div>
 
@@ -354,7 +396,7 @@ dialog form { position: relative; margin-top: 48px; }
         <div class="shelf s-math"><h4>Math</h4><ul><li>Math Practice</li><li>Math Quiz, with a scratchpad</li><li>Clock</li><li>Cash Register</li></ul></div>
         <div class="shelf s-read"><h4>Reading &amp; Writing</h4><ul><li>Read-Along stories</li><li>Read to Me (reading aloud)</li><li>Word Lab</li><li>Listen &amp; Do</li><li>Spelling Bee</li><li>Sentence Fixer</li><li>Writing</li><li>Tracing</li><li>Typing</li></ul></div>
         <div class="shelf s-explore"><h4>Explore</h4><ul><li>Science Lab</li><li>History</li><li>Listen &amp; Learn podcasts</li><li>Coding</li><li>Music</li></ul></div>
-        <div class="shelf s-feel"><h4>Create, Feel &amp; My Stuff</h4><ul><li>Sketchbook</li><li>Feelings</li><li>Calm Corner</li><li>Shop</li><li>My World</li><li>My Fridge</li></ul></div>
+        <div class="shelf s-feel"><h4>Create, Feel &amp; My Stuff</h4><ul><li>Sketchbook</li><li>Feelings</li><li>Calm Corner</li><li>Shop</li><li>My World</li><li>My Fridge</li><li>My Workbook</li></ul></div>
       </div>
     </div>
   </section>
@@ -364,7 +406,7 @@ dialog form { position: relative; margin-top: 48px; }
     <div class="sec-head">
       <span class="tag grown">For grown-ups</span>
       <h2>A parent dashboard that shows what's actually happening</h2>
-      <p>The parent area is behind a PIN. Anything that changes grades, grants coins or deletes work happens there.</p>
+      <p>The parent area is behind a PIN, and it's also on your phone with Fridge Parent. Anything that changes grades, grants coins or deletes work happens there.</p>
     </div>
 
     <div class="rows">
@@ -374,7 +416,7 @@ dialog form { position: relative; margin-top: 48px; }
         </div>
         <div class="copy">
           <h3>You set the pace</h3>
-          <p>Math, reading and writing each move through stages: a grade plus a trimester. The dashboard shows how many of a stage's new skills your child has mastered. When you think they're ready, you move them on. The app never promotes them on its own.</p>
+          <p>Math, reading and writing each move through stages: a grade plus a trimester. The dashboard shows how many of a stage's new skills your child has mastered. When 80% of them are mastered, it suggests a checkpoint. When you think they're ready, you move them on. The app never promotes them on its own.</p>
           <p>Each subject moves separately. A child can be in 2nd-grade reading and 1st-grade math.</p>
         </div>
       </div>
@@ -405,7 +447,7 @@ dialog form { position: relative; margin-top: 48px; }
         <div class="copy">
           <h3>A report that counts real time</h3>
           <p>Active time only counts touching, writing or typing. If the tablet sits idle on a lesson, that time is left out. The report breaks time down by subject and lists every activity and every skill practiced, with an average score for each.</p>
-          <p>When you want a clearer check, start a trimester checkpoint: three questions for each new standard, no hints. Your child can review their answers before turning it in. Each standard comes back as Met, Approaching or Not yet, and the report tracks the trend.</p>
+          <p>When you want a clearer check, start a trimester checkpoint: three questions for each new standard, no hints. Your child can review their answers before turning it in. Each standard comes back as Met, Approaching or Not yet, and the report tracks the trend. Scoring 80% or more passes, which earns your child 1,000 coins once per stage.</p>
         </div>
       </div>
 
@@ -416,10 +458,30 @@ dialog form { position: relative; margin-top: 48px; }
         </div>
         <div class="copy">
           <h3>The fridge, without the magnets</h3>
-          <p>Drawings, stories and handwritten math work arrive in your inbox. Approve a piece and it goes up on your child's fridge with coins and a note from you. You can also print it for the real fridge.</p>
-          <p>Opinion, informative and story writing is scored by you, using that grade's rubric.</p>
+          <p>Drawings, stories, handwritten math work and photos of work done on paper arrive in your inbox. Approve a piece and it goes up on your child's fridge with a note from you and as many coins as you choose, up to 1,000. You can also print it for the real fridge.</p>
+          <p>Opinion, informative and story writing is scored by you, using that grade's rubric, and you can see whether a piece meets the grade's standard.</p>
         </div>
       </div>
+
+      <div class="row" id="phones">
+        <div class="shots phones">
+          <button class="tab" type="button" data-caption="Fridge Parent: a stage's skills on the Standards tab"><img src="img/phone-standards.jpg" alt="Phone: Math, Grade 2, Trimester 2, with 2 of 7 new skills mastered and each skill marked mastered, getting there or needs help" width="720" height="1100" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Fridge Parent: review a piece, leave a note and choose the coins"><img src="img/phone-approve.jpg" alt="Phone: a written answer to What is your favorite thing to do on a sunny day, with a revision note for the learner, a coins-to-give box set to 15, and Approve and Print buttons" width="720" height="1100" loading="lazy"></button>
+          <button class="tab" type="button" data-caption="Fridge Parent: active learning time by subject"><img src="img/phone-progress.jpg" alt="Phone: active learning time today, 44 minutes, broken down by subject with math the longest" width="720" height="1100" loading="lazy"></button>
+        </div>
+        <div class="copy">
+          <h3>The parent area, on your phone</h3>
+          <p>Fridge Parent is a companion app for Android phones. It shows the tablet's whole parent area, live: approve work, read the report, check standards and set stages from another room. More than one parent can connect at a time.</p>
+          <p>It works only over your home Wi-Fi, and only after you turn on "Parent phones" on the tablet. Each phone is paired once by scanning a QR code shown behind the PIN, and opens with the phone's own screen lock. The phone saves nothing, and it forgets everything a minute after you leave the app.</p>
+          <p class="note">The PIN, learner export and the list of paired phones stay on the tablet. Removing a phone there disconnects it at once.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="minis">
+      <div class="mini"><h4>Paper workbooks count too</h4><p>Add your child's workbooks. They log pages, minutes and up to 10 photos. You approve each log with the coins you choose, and the minutes show up in the report.</p></div>
+      <div class="mini"><h4>Work done away from the app</h4><p>If the kind of work a pick asks for happened somewhere else, mark it done. It stops holding anything back, pays nothing, and can be undone.</p></div>
+      <div class="mini"><h4>Extra goal practice</h4><p>A child working toward a checkpoint can keep practicing past the daily limit, for no coins. It's on by default, and you can turn it off for each child.</p></div>
     </div>
   </section>
 
@@ -428,10 +490,10 @@ dialog form { position: relative; margin-top: 48px; }
     <div class="privacy">
       <div class="intro">
         <h2>It stays on the tablet</h2>
-        <p>The Fridge has no servers and no accounts. Your child's work, voice and progress never leave the device unless you export them yourself.</p>
+        <p>The Fridge has no servers and no accounts. Your child's work, voice and progress stay on the tablet, unless you export a learner yourself or look at them on a phone you paired.</p>
       </div>
       <ul class="promises">
-        <li><b>No internet access</b><span>The app doesn't request Android's internet permission, so it has no way to send anything anywhere.</span></li>
+        <li><b>Home Wi-Fi only</b><span>The app never connects to the internet. Its only network use is the link to paired parent phones, which is off until you turn it on and reaches only devices on your home network. It trusts no outside certificate authority, and both ends check each other's certificate from pairing.</span></li>
         <li><b>Encrypted on the device</b><span>The database is encrypted, with its key held by the tablet's Android Keystore. Device backups are turned off.</span></li>
         <li><b>Voices stay local</b><span>Read-aloud uses offline voices, and speech recognition runs on the tablet. When a child reads aloud, only the score is kept, never the recording.</span></li>
         <li><b>No ads, no tracking</b><span>No sign-up, analytics or in-app purchases. Coins are only earned by learning.</span></li>
